@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#000000" />
   <title>Hundred Eyes</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
   <style>
     * {
@@ -25,11 +25,40 @@
     body {
       position: relative;
       background:
-        radial-gradient(circle at 50% 50%, rgba(0, 120, 160, 0.028), transparent 28%),
-        radial-gradient(circle at 20% 25%, rgba(0, 70, 130, 0.022), transparent 24%),
-        radial-gradient(circle at 80% 75%, rgba(0, 100, 90, 0.02), transparent 26%),
+        radial-gradient(circle at 50% 50%, rgba(90, 210, 40, 0.03), transparent 28%),
+        radial-gradient(circle at 20% 25%, rgba(45, 150, 20, 0.022), transparent 24%),
+        radial-gradient(circle at 80% 75%, rgba(70, 190, 35, 0.022), transparent 26%),
         #000;
-      font-family: Inter, system-ui, sans-serif;
+      font-family: "Courier New", "Lucida Console", monospace;
+    }
+
+    body.mass-pulse::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 6;
+      pointer-events: none;
+      background: rgba(150, 255, 80, 0.08);
+      mix-blend-mode: screen;
+      animation: pagePulse 760ms ease-out forwards;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 8;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(110, 255, 70, 0.075) 0,
+          rgba(110, 255, 70, 0.075) 1px,
+          transparent 1px,
+          transparent 5px
+        );
+      opacity: 0.42;
+      mix-blend-mode: screen;
     }
 
     .grid-wrap,
@@ -45,6 +74,8 @@
       display: grid;
       place-items: center;
       padding: clamp(14px, 2vw, 26px);
+      background:
+        radial-gradient(circle at center, transparent 0 42%, rgba(0, 0, 0, 0.18) 62%, rgba(0, 0, 0, 0.62) 88%, rgba(0, 0, 0, 0.90) 100%);
     }
 
     .grid {
@@ -53,24 +84,24 @@
       display: grid;
       grid-template-columns: repeat(10, 1fr);
       grid-template-rows: repeat(10, 1fr);
-      gap: clamp(6px, 0.65vw, 12px);
+      gap: clamp(4px, 0.45vw, 8px);
     }
 
     .cell {
       position: relative;
       overflow: hidden;
-      border-radius: 16px;
+      border-radius: 6px;
       background:
-        linear-gradient(180deg, rgba(255,255,255,0.022), rgba(255,255,255,0.006)),
-        rgba(255,255,255,0.008);
-      border: 1px solid rgba(180, 235, 255, 0.035);
+        linear-gradient(180deg, rgba(155,255,95,0.012), rgba(155,255,95,0.002)),
+        rgba(80,255,70,0.004);
+      border: 1px solid rgba(120, 255, 80, 0.026);
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.02),
-        inset 0 -1px 0 rgba(255,255,255,0.008),
-        inset 0 0 28px rgba(255,255,255,0.008),
-        0 0 0 1px rgba(0,0,0,0.22);
-      backdrop-filter: blur(14px) saturate(115%);
-      -webkit-backdrop-filter: blur(14px) saturate(115%);
+        inset 0 1px 0 rgba(180,255,120,0.012),
+        inset 0 -1px 0 rgba(0,0,0,0.34),
+        inset 0 0 24px rgba(0,0,0,0.42),
+        0 0 0 1px rgba(0,0,0,0.32);
+      backdrop-filter: blur(10px) saturate(96%);
+      -webkit-backdrop-filter: blur(10px) saturate(96%);
     }
 
     .cell::before {
@@ -78,9 +109,9 @@
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.018), transparent 36%),
-        radial-gradient(circle at 78% 24%, rgba(255,255,255,0.018), transparent 16%);
-      opacity: 0.45;
+        linear-gradient(135deg, rgba(255,255,255,0.008), transparent 32%),
+        radial-gradient(circle at 78% 24%, rgba(255,255,255,0.009), transparent 14%);
+      opacity: 0.34;
     }
 
     .cell::after {
@@ -88,7 +119,7 @@
       position: absolute;
       inset: 0;
       border-radius: inherit;
-      box-shadow: inset 0 0 26px rgba(0, 0, 0, 0.42);
+      box-shadow: inset 0 0 34px rgba(0, 0, 0, 0.62);
     }
 
     .iris {
@@ -103,13 +134,39 @@
       mix-blend-mode: screen;
       filter:
         blur(0.12px)
-        drop-shadow(0 0 10px rgba(95, 220, 255, 0.10))
-        drop-shadow(0 0 24px rgba(0, 120, 180, 0.07));
+        drop-shadow(0 0 8px rgba(70, 255, 40, 0.16))
+        drop-shadow(0 0 24px rgba(40, 220, 20, 0.10));
       animation: irisLife var(--life) ease-in-out forwards;
     }
 
     .iris.mass-iris {
       animation: massEyeLife var(--life) ease-in-out forwards;
+    }
+
+    .iris.wrong-eye {
+      mix-blend-mode: lighten;
+      filter:
+        blur(0.1px)
+        drop-shadow(0 0 14px rgba(255, 55, 55, 0.18))
+        drop-shadow(0 0 36px rgba(255, 0, 80, 0.10));
+    }
+
+    .iris.wrong-eye::before {
+      background:
+        radial-gradient(circle, #050000 0 13%, rgba(255, 245, 245, 0.96) 14% 18%, transparent 19%),
+        radial-gradient(circle, transparent 0 28%, rgba(255, 225, 225, 0.22) 29%, transparent 31%),
+        repeating-conic-gradient(
+          from var(--spin),
+          rgba(255, 245, 238, 0.70) 0deg 0.5deg,
+          rgba(255, 30, 70, 0.34) 0.8deg 2.1deg,
+          transparent 2.35deg 5deg
+        ),
+        radial-gradient(
+          circle,
+          rgba(190, 0, 34, 0.72) 0 34%,
+          rgba(35, 0, 6, 0.88) 56%,
+          transparent 72%
+        );
     }
 
     .iris::before {
@@ -119,17 +176,17 @@
       border-radius: 50%;
       background:
         radial-gradient(circle, #000 0 16%, transparent 17%),
-        radial-gradient(circle, transparent 0 26%, rgba(205,245,255,var(--ring-alpha)) 27%, transparent 29%),
+        radial-gradient(circle, transparent 0 26%, rgba(155,255,95,var(--ring-alpha)) 27%, transparent 29%),
         repeating-conic-gradient(
           from var(--spin),
-          rgba(185, 245, 255, var(--fiber-bright)) 0deg 0.45deg,
-          rgba(40, 145, 190, var(--fiber-dim)) 0.7deg 1.9deg,
+          rgba(130, 255, 70, var(--fiber-bright)) 0deg 0.45deg,
+          rgba(35, 195, 25, var(--fiber-dim)) 0.7deg 1.9deg,
           transparent 2.15deg 4.8deg
         ),
         radial-gradient(
           circle,
-          rgba(45, 175, 215, var(--core-alpha)) 0 34%,
-          rgba(5, 20, 30, 0.72) 56%,
+          rgba(48, 210, 26, var(--core-alpha)) 0 34%,
+          rgba(4, 18, 3, 0.80) 56%,
           transparent 72%
         );
       box-shadow:
@@ -148,11 +205,11 @@
         conic-gradient(
           from calc(var(--spin) * -1),
           transparent 0 12deg,
-          rgba(150, 238, 255, var(--halo-alpha)) 13deg 15deg,
+          rgba(130, 255, 70, var(--halo-alpha)) 13deg 15deg,
           transparent 16deg 38deg,
-          rgba(40, 120, 180, calc(var(--halo-alpha) * 0.8)) 39deg 41deg,
+          rgba(45, 205, 25, calc(var(--halo-alpha) * 0.8)) 39deg 41deg,
           transparent 42deg 70deg,
-          rgba(180, 245, 255, calc(var(--halo-alpha) * 0.75)) 71deg 73deg,
+          rgba(150, 255, 85, calc(var(--halo-alpha) * 0.75)) 71deg 73deg,
           transparent 74deg 360deg
         );
       mask-image: radial-gradient(circle, transparent 0 42%, black 43% 60%, transparent 63%);
@@ -233,9 +290,9 @@
       border-radius: 44% 44% 48% 48%;
       opacity: 0;
       background:
-        radial-gradient(ellipse at 50% 32%, rgba(180,220,245,0.085), transparent 32%),
-        radial-gradient(ellipse at 37% 38%, rgba(210,240,255,0.07), transparent 7%),
-        radial-gradient(ellipse at 63% 38%, rgba(210,240,255,0.07), transparent 7%),
+        radial-gradient(ellipse at 50% 32%, rgba(185,240,145,0.085), transparent 32%),
+        radial-gradient(ellipse at 37% 38%, rgba(215,255,175,0.07), transparent 7%),
+        radial-gradient(ellipse at 63% 38%, rgba(215,255,175,0.07), transparent 7%),
         radial-gradient(ellipse at 50% 61%, rgba(255,255,255,0.03), transparent 6%),
         linear-gradient(to bottom, transparent 0 48%, rgba(0,0,0,0.82) 100%);
       filter: blur(1.5px);
@@ -253,8 +310,51 @@
     .vignette {
       z-index: 4;
       background:
-        radial-gradient(circle at center, transparent 0 42%, rgba(0,0,0,0.30) 66%, rgba(0,0,0,0.96) 100%),
-        linear-gradient(to bottom, rgba(0,0,0,0.84), transparent 42%, rgba(0,0,0,0.90));
+        radial-gradient(circle at center, transparent 0 40%, rgba(0,0,0,0.28) 66%, rgba(0,0,0,0.90) 100%),
+        linear-gradient(to bottom, rgba(0,0,0,0.72), transparent 42%, rgba(0,0,0,0.82));
+    }
+
+    .landing {
+      position: fixed;
+      left: clamp(22px, 6vw, 86px);
+      bottom: clamp(24px, 7vh, 82px);
+      z-index: 7;
+      width: min(520px, calc(100vw - 44px));
+      color: rgba(238, 252, 245, 0.96);
+      pointer-events: auto;
+      text-shadow:
+        0 0 5px rgba(210, 255, 230, 0.42),
+        0 0 18px rgba(40, 220, 20, 0.18);
+    }
+
+    .brand {
+      margin: 0 0 20px;
+      font-size: clamp(46px, 7.2vw, 104px);
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .copy {
+      width: min(430px, 100%);
+      margin: 0;
+      padding: 0;
+      color: rgba(115, 255, 80, 0.84);
+      font-size: clamp(19px, 2vw, 28px);
+      line-height: 1.55;
+    }
+
+    @keyframes pagePulse {
+      0% {
+        opacity: 0;
+      }
+      28% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
     }
 
     @keyframes irisLife {
@@ -352,10 +452,35 @@
     @media (max-width: 900px) {
       .grid {
         gap: 6px;
+        width: 126vw;
+        height: 126vw;
+        max-height: 92vh;
       }
 
       .cell {
         border-radius: 12px;
+      }
+
+      .landing {
+        left: 50%;
+        right: auto;
+        top: 50%;
+        bottom: auto;
+        width: auto;
+        transform: translate(-50%, -50%);
+        text-align: center;
+      }
+
+      .brand {
+        max-width: 360px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .copy {
+        max-width: 330px;
+        margin-left: auto;
+        margin-right: auto;
       }
     }
   </style>
@@ -367,13 +492,19 @@
 
   <div class="grain"></div>
   <div class="vignette"></div>
+  <main class="landing" aria-label="Hundred Eyes landing content">
+    <h1 class="brand">Hundred Eyes</h1>
+    <p class="copy">Always watching. Never sleeping.</p>
+  </main>
 
   <script>
     const grid = document.getElementById("grid");
     const totalCells = 100;
     const maxActiveEyes = 6;
     const groupBlinkChance = 0.05;
+    const wrongEyeChance = 0.001;
     let isMassBlinking = false;
+    let pointer = null;
     const activeCells = new Set();
     const cells = [];
 
@@ -399,6 +530,37 @@
         if (!activeCells.has(i)) indices.push(i);
       }
       return indices;
+    }
+
+    function pointerCellIndex() {
+      if (!pointer) return null;
+
+      const rect = grid.getBoundingClientRect();
+      if (
+        pointer.x < rect.left ||
+        pointer.x > rect.right ||
+        pointer.y < rect.top ||
+        pointer.y > rect.bottom
+      ) {
+        return null;
+      }
+
+      const col = Math.min(9, Math.max(0, Math.floor(((pointer.x - rect.left) / rect.width) * 10)));
+      const row = Math.min(9, Math.max(0, Math.floor(((pointer.y - rect.top) / rect.height) * 10)));
+      return row * 10 + col;
+    }
+
+    function nearbyInactiveCellIndices(centerIndex, radius = 2) {
+      if (centerIndex === null) return [];
+
+      const centerRow = Math.floor(centerIndex / 10);
+      const centerCol = centerIndex % 10;
+
+      return randomInactiveCellIndices().filter((index) => {
+        const row = Math.floor(index / 10);
+        const col = index % 10;
+        return Math.abs(row - centerRow) <= radius && Math.abs(col - centerCol) <= radius;
+      });
     }
 
     function setEyeStyle(iris, options = {}) {
@@ -442,6 +604,9 @@
     function triggerMassBlink() {
       if (isMassBlinking) return;
       isMassBlinking = true;
+      document.body.classList.remove("mass-pulse");
+      void document.body.offsetWidth;
+      document.body.classList.add("mass-pulse");
       clearEyes();
 
       const massLife = "2.7s";
@@ -463,6 +628,7 @@
       setTimeout(() => {
         clearEyes();
         isMassBlinking = false;
+        document.body.classList.remove("mass-pulse");
         setTimeout(pulse, rand(500, 900));
       }, 2950);
     }
@@ -476,7 +642,7 @@
       activeCells.add(index);
 
       const iris = document.createElement("div");
-      iris.className = "iris";
+      iris.className = chance(wrongEyeChance) ? "iris wrong-eye" : "iris";
 
       const eye = setEyeStyle(iris);
 
@@ -509,10 +675,11 @@
         return;
       }
 
-      const free = randomInactiveCellIndices();
+      const near = nearbyInactiveCellIndices(pointerCellIndex(), 2);
+      const free = near.length && chance(0.72) ? near : randomInactiveCellIndices();
 
       if (!free.length || activeCells.size >= maxActiveEyes) {
-        setTimeout(pulse, rand(700, 1300));
+        setTimeout(pulse, rand(2800, 4200));
         return;
       }
 
@@ -524,11 +691,19 @@
       for (let i = 0; i < count; i++) {
         const pickIndex = Math.floor(Math.random() * free.length);
         const cellIndex = free.splice(pickIndex, 1)[0];
-        setTimeout(() => spawnEye(cellIndex), i * rand(240, 520));
+        setTimeout(() => spawnEye(cellIndex), i * rand(420, 820));
       }
 
-      setTimeout(pulse, burst ? rand(1800, 3200) : rand(1200, 2400));
+      setTimeout(pulse, burst ? rand(5600, 7600) : rand(3600, 5200));
     }
+
+    window.addEventListener("pointermove", (event) => {
+      pointer = { x: event.clientX, y: event.clientY };
+    });
+
+    window.addEventListener("pointerleave", () => {
+      pointer = null;
+    });
 
     pulse();
   </script>
